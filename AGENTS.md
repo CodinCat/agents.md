@@ -11,5 +11,6 @@
 - Type casting is rarely needed. You need to provide an explanation when using one.
 - `Record<string, unknown>` is a sign of slop: either types have been widened or erased, or untrusted input hasn't been parsed into stronger domain types. You must have a very good reason if you want to add one.
 - `isRecord` is also a sign of slop. Most codebase won't need it. Only add one when you firmly believe it's the necessary situation.
-- Always prefer using or installing a suitable component from `shadcn/ui` instead of creating one from scratch.
+- Prefer higher-level integration tests over unit tests. Simulate a real user as much as possible. Never test implementation details.
+- Prefer using or installing a suitable component from `shadcn/ui` instead of creating one from scratch.
 - No headline eyebrows.
