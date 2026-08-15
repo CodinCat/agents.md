@@ -1,0 +1,15 @@
+- Run `vp check` for formatting, linting, and type checking. No need to run `vp build`.
+- Choose the simplest implementation that fully meets the current requirements.
+- Only create an abstraction if it's actually needed.
+- Avoid utility functions when a simple inline expression would suffice.
+- Don't preserve backward compatibility when making changes.
+- Keep high cohesion and colocation in mind.
+- Code that changes together should stay together. It's sloppy to declare a value at top and use it a hundred lines later.
+- Avoid unnecessary `try`/`catch` blocks.
+- Never use `enum`. Use plain objects with `as const` instead.
+- Never use `any`. If you believe it's the necessary case, ask for approval.
+- Type casting is rarely needed. You need to provide an explanation when using one.
+- `Record<string, unknown>` is a sign of slop: either types have been widened or erased, or untrusted input hasn't been parsed into stronger domain types. You must have a very good reason if you want to add one.
+- `isRecord` is also a sign of slop. Most codebase won't need it. Only add one when you firmly believe it's the necessary situation.
+- Always prefer using or installing a suitable component from `shadcn/ui` instead of creating one from scratch.
+- No headline eyebrows.
