@@ -14,3 +14,4 @@
 - Prefer higher-level integration tests over unit tests. Simulate a real user as much as possible. Never test implementation details.
 - Prefer using or installing a suitable component from `shadcn/ui` instead of creating one from scratch.
 - No headline eyebrows.
+- When asking you to review, assume lint and test have passed already. Don't waste time to run again.
