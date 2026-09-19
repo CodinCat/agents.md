@@ -3,8 +3,10 @@
 - Only create an abstraction if it's actually needed.
 - Avoid utility functions when a simple inline expression would suffice.
 - Don't preserve backward compatibility when making changes.
+- When removing a behavior, also remove the supporting code that existed only for it. Simplify the remaining implementation as if that behavior had never been added.
+- Before choosing a bug fix, identify why the code allowed this class of mistake and whether a simple change can prevent it by construction. Do not stop at patching the reported case and adding a test that only repeats it. Design regression tests that catch the same underlying mistake in other cases or future changes; passing the original example alone is not enough.
 - Keep high cohesion and colocation in mind.
-- Code that changes together should stay together. It's sloppy to declare a value at top and use it a hundred lines later.
+- Code that changes together should stay together. Don't declare a value and use it a hundred lines later.
 - Avoid unnecessary `try`/`catch` blocks.
 - Never use `enum`. Use plain objects with `as const` instead.
 - Never use `any`. If you believe it's the necessary case, ask for approval.
@@ -12,6 +14,12 @@
 - `Record<string, unknown>` is a sign of slop: either types have been widened or erased, or untrusted input hasn't been parsed into stronger domain types. You must have a very good reason if you want to add one.
 - `isRecord` is also a sign of slop. Most codebase won't need it. Only add one when you firmly believe it's the necessary situation.
 - Prefer higher-level integration tests over unit tests. Simulate a real user as much as possible. Never test implementation details.
+- Don't write tests for what the type system already guarantees.
 - Prefer using or installing a suitable component from `shadcn/ui` instead of creating one from scratch.
 - No headline eyebrows.
-- When asking you to review, assume lint and test have passed already. Don't waste time to run again.
+- When asking you to review, assume lint and test have passed already. No need to run again.
+- Don't add tautological assertions. An assertion is tautological when it cannot fail unless the implementation and the test change in lockstep — there is no independent oracle. Typical forms:
+  - Identity predicates: `isFoo(FOO_CONSTANT)` when `isFoo` is `===`, `includes`, or `Set.has` of that same constant. Keep the interesting branches (normalization, prefix/suffix, negatives, Error wrapping, cause chains).
+  - Constant-to-self pins: `expect(EXPORTED_DAYS).toBe(14)` or `expect(exportedDelays).toEqual([100, 500, 1_500])`. If the value is a public contract, assert it where a caller observes it (serialized payload, HTTP body, retry `nextDelayMs`), not on the export itself.
+  - Algorithm echo: building `expected` with the same helper the production function uses (`shellQuote(x)` on both sides; picking the same fields `toSummary(post)` returns). Use an independent oracle (hardcoded quoted string, live schema after migration).
+  - Self-equality: `equal(x, x)`. Type-only checks, instructional-copy pins, and a lone "q is not there" after a deletion (later bullets) are the same failure mode. A cheap syntactic checker cannot see this reliably; reject it in review.
